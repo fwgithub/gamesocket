@@ -160,6 +160,7 @@ class PS {
 				$bytess = socket_read($this->socket,4096);
 				//$bytess = send($binarydata);
 				$Headd = $this->unpackhead($bytess);
+				print_r($Headd);
 				if($this->status($Headd['Message']) == 4) {
 					//print_r($mcontentt);
 					$this->authed();

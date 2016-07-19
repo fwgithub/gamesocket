@@ -12,16 +12,13 @@
 	//echo @$_POST['act'];
 	// $ps->read();
 // }
-
 //global $ps ;
 
-
 $ps = new PS();
-
 $ps->connect();
-if(isset($_POST)) {
-	$ps->read();
-}
+// if(isset($_POST)) {
+	// $ps->read();
+// }
 	
 	
 class PS {
@@ -50,8 +47,6 @@ class PS {
 			//sleep(5);
 
 		// }while(true);
-
-		//echo "str";
 	}
 
 	//组包头
@@ -121,17 +116,16 @@ class PS {
 		print_r($GLOBALS["test"]);
 		 $bytes = socket_read($this->socket,4096);
 		 $Head = self::unpackhead($bytes);
-		 $mcontent = substr($bytes,28,4); 
-		 //$this->readnext($bytes);
-		 
-		print_r($Head);
+		 $mcontent = substr($bytes,28,4);
+		  	
+		 self::readnext($bytes);
 	}
 	//判断是否下一步
 	function readnext($bytes) {
 		$Head = $this->unpackhead($bytes);
 		$mcontent = substr($bytes,28,4);
 		print_r(8888);
-		
+		print_r($Head);	
 		switch($Head['Message']){
 			case 2:		//self::MSG_CONNECTED
 				$this->connected($mcontent);
@@ -178,11 +172,22 @@ class PS {
 		$content='';
 		$socketid = unpack("l",$mcontent);
 		if($socketid){
+			print_r($socketid);
 			$contentt = pack("l", $socketid[1]);
 			$contenttt = pack("c", 1);
 			$content = $contentt.$content;
 			$binarydata = $this->packhead(self::MSG_AUTH,0,$content);
 			socket_write($this->socket , $binarydata, strlen($binarydata));
+			$bytes = socket_read($this->socket,4096);
+			$Headd = $this->unpackhead($bytes);
+			$mcontent = substr($bytes,28,4); 
+			print_r($Headd);
+			if($this->status($Headd['Message']) == 4) {
+					//print_r($mcontentt);
+					$this->authed();
+				} else {
+					return false;
+				}
 		}
 
 	}

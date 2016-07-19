@@ -1,7 +1,7 @@
 function postListString() {
         $.ajax({
             type: "POST",
-            url: "str.php",
+            url: "read.php",
             contentType: "application/x-www-form-urlencoded",
             dataType: "json",
             data: {act:'ajax'},
